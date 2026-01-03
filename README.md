@@ -1,4 +1,4 @@
-# DeepResearch
+# Mind2Report
 
 **A lightweight deep research framework based on progressive search and cross-evaluation.**
 
