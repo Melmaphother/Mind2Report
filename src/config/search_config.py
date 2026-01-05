@@ -5,12 +5,13 @@ from typing import Dict, Type, TypeVar
 
 
 # Define generic type variable for type hinting
-T = TypeVar('T', bound='SearchConfig')
+T = TypeVar("T", bound="SearchConfig")
 
 
 @dataclass(kw_only=True)
 class SearchConfig:
     """Search engine configuration class containing search service parameters"""
+
     engine: str
     jina_api_key: str
     tavily_api_key: str
@@ -30,13 +31,13 @@ class SearchConfig:
         Raises:
             ValueError: If required fields are missing or invalid
         """
-        required_fields = ['engine']
+        required_fields = ["engine"]
         for field in required_fields:
             if field not in config_dict:
                 raise ValueError(f"Configuration missing required field: {field}")
 
         # Validate timeout if provided
-        timeout = config_dict.get('timeout', 30)
+        timeout = config_dict.get("timeout", 30)
         try:
             timeout = int(timeout)
             if timeout < 1 or timeout > 300:
@@ -45,10 +46,10 @@ class SearchConfig:
             raise ValueError("Timeout must be a valid integer")
 
         return cls(
-            engine=config_dict['engine'],
-            jina_api_key=config_dict['jina_api_key'],
-            tavily_api_key=config_dict['tavily_api_key'],
-            timeout=timeout
+            engine=config_dict["engine"],
+            jina_api_key=config_dict["jina_api_key"],
+            tavily_api_key=config_dict["tavily_api_key"],
+            timeout=timeout,
         )
 
 
@@ -74,11 +75,13 @@ def load_search_config(config_path: Path = None) -> SearchConfig:
 
     # Load and validate raw configuration
     raw_config = toml.load(config_path)
-    if not isinstance(raw_config, dict) or 'search' not in raw_config:
-        raise ValueError("Invalid configuration file format. Expected [search] section.")
+    if not isinstance(raw_config, dict) or "search" not in raw_config:
+        raise ValueError(
+            "Invalid configuration file format. Expected [search] section."
+        )
 
     # Create configuration instance from the [search] section
-    return SearchConfig.from_dict(raw_config['search'])
+    return SearchConfig.from_dict(raw_config["search"])
 
 
 # Initialize configurations for import by other modules
@@ -91,7 +94,10 @@ if __name__ == "__main__":
         config = load_search_config()
         print("Loaded search configuration:")
         print(f"Engine: {config.engine}")
-        print(f"API Key: {config.api_key[:4]}...{config.api_key[-4:]}")  # Masked for security
+        print(f"Jina API Key: {config.jina_api_key[:4]}...{config.jina_api_key[-4:]}")
+        print(
+            f"Tavily API Key: {config.tavily_api_key[:4]}...{config.tavily_api_key[-4:]}"
+        )
         print(f"Timeout: {config.timeout}s")
     except Exception as e:
         print(f"Error loading configuration: {e}")

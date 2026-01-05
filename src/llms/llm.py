@@ -3,13 +3,14 @@ from langchain.schema import HumanMessage, AIMessage, SystemMessage
 from langchain_deepseek import ChatDeepSeek
 
 from src.config.llms_config import LLMType, llm_configs
+
 # Cache storage for LLM instances - key includes both type and streaming mode
 _llm_cache: Dict[tuple[LLMType, bool, int], ChatDeepSeek] = {}
 
 
-def _get_llm_instance(llm_type: LLMType,
-                      streaming: bool = False,
-                      max_tokens: int = 8192) -> ChatDeepSeek:
+def _get_llm_instance(
+    llm_type: LLMType, streaming: bool = False, max_tokens: int = 8192
+) -> ChatDeepSeek:
     """
     Retrieves a cached ChatOpenAI instance or creates a new one with specified parameters.
 
@@ -49,9 +50,9 @@ def _get_llm_instance(llm_type: LLMType,
 
 
 def llm(
-        llm_type: LLMType,
-        messages: List[Union[HumanMessage, AIMessage, SystemMessage]],
-        stream: bool = False
+    llm_type: LLMType,
+    messages: List[Union[HumanMessage, AIMessage, SystemMessage]],
+    stream: bool = False,
 ) -> Union[Generator[str, None, None], str]:
     """
     Generates responses from LLM with support for streaming and non-streaming modes.
@@ -72,7 +73,9 @@ def llm(
         return _non_stream_llm_response(llm, messages)
 
 
-def _stream_llm_response(llm: ChatDeepSeek, messages: List[Union[HumanMessage, AIMessage, SystemMessage]]) -> Generator[str, None, None]:
+def _stream_llm_response(
+    llm: ChatDeepSeek, messages: List[Union[HumanMessage, AIMessage, SystemMessage]]
+) -> Generator[str, None, None]:
     """
     Handles streaming responses from LLM.
 
@@ -90,10 +93,12 @@ def _stream_llm_response(llm: ChatDeepSeek, messages: List[Union[HumanMessage, A
             content = chunk.content
             yield reasoning_content, content
     except Exception as e:
-        print(f"call sparkapi error:{e}")
+        print(f"call llm api error:{e}")
 
 
-def _non_stream_llm_response(llm: ChatDeepSeek, messages: List[Union[HumanMessage, AIMessage, SystemMessage]]) -> str:
+def _non_stream_llm_response(
+    llm: ChatDeepSeek, messages: List[Union[HumanMessage, AIMessage, SystemMessage]]
+) -> str:
     """
     Handles non-streaming responses from LLM.
 
@@ -107,11 +112,15 @@ def _non_stream_llm_response(llm: ChatDeepSeek, messages: List[Union[HumanMessag
     try:
         response = llm.invoke(messages)
     except Exception as e:
-        print(f"call sparkapi error:{e}")
+        print(f"call llm api error:{e}")
         return ""
-    reasoning_content = response.additional_kwargs.get("reasoning_content","")
+    reasoning_content = response.additional_kwargs.get("reasoning_content", "")
     content = response.content
-    return f"<thinking>{reasoning_content}</thinking>\n{content}" if reasoning_content else f"{content}"
+    return (
+        f"<thinking>{reasoning_content}</thinking>\n{content}"
+        if reasoning_content
+        else f"{content}"
+    )
 
 
 if __name__ == "__main__":
@@ -119,27 +128,34 @@ if __name__ == "__main__":
         # Example conversation message list
         conversation = [
             SystemMessage(
-                content="You are a physics expert skilled at explaining complex concepts in simple, understandable language."),
-            HumanMessage(content="Please explain the concept of quantum superposition."),
+                content="You are a physics expert skilled at explaining complex concepts in simple, understandable language."
+            ),
+            HumanMessage(
+                content="Please explain the concept of quantum superposition."
+            ),
             AIMessage(
-                content="Quantum superposition is a fundamental principle in quantum mechanics, stating that microscopic particles can exist in multiple states simultaneously until measured, at which point they collapse to a definite state."),
+                content="Quantum superposition is a fundamental principle in quantum mechanics, stating that microscopic particles can exist in multiple states simultaneously until measured, at which point they collapse to a definite state."
+            ),
         ]
 
         # Demonstrate non-streaming response (continuing the conversation)
         print("=== Non-streaming Response ===")
         non_stream_response = llm(
             "basic",
-            [*conversation, HumanMessage(content="Can you explain this using an everyday analogy?")],
-            stream=False
+            [
+                *conversation,
+                HumanMessage(content="Can you explain this using an everyday analogy?"),
+            ],
+            stream=False,
         )
         print(non_stream_response)
 
         # Demonstrate streaming response
         print("\n=== Streaming Response ===")
         for reasoning_content, content in llm(
-                "basic",
-                [*conversation, HumanMessage(content="What is quantum entanglement then?")],
-                stream=True
+            "basic",
+            [*conversation, HumanMessage(content="What is quantum entanglement then?")],
+            stream=True,
         ):
             print(reasoning_content, end="", flush=True)
             print(content, end="", flush=True)

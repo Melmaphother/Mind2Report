@@ -1,29 +1,29 @@
 [basic]
-api_base="https://maas-api.cn-huabei-1.xf-yun.com/v1"
-model="xdeepseekv31"
-api_key="sk-xxxxxxx16E165Bd"
+api_base = "https://api.deepseek.com/v1"
+model = "deepseek-chat"
+api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 [clarify]
-api_base="https://maas-api.cn-huabei-1.xf-yun.com/v1"
-model="xdeepseekv31"
-api_key="sk-xxxxxxx16E165Bd"
+api_base = "https://api.deepseek.com/v1"
+model = "deepseek-chat"
+api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 [planner]
-api_base="https://maas-api.cn-huabei-1.xf-yun.com/v1"
-model="xdeepseekr1"
-api_key="sk-xxxxxxx16E165Bd"
+api_base = "https://api.deepseek.com/v1"
+model = "deepseek-reasoner"
+api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 [query_generation]
-api_base="https://maas-api.cn-huabei-1.xf-yun.com/v1"
-model="xdeepseekv31"
-api_key="sk-xxxxxxx16E165Bd"
+api_base = "https://api.deepseek.com/v1"
+model = "deepseek-chat"
+api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 [evaluate]
-api_base="https://maas-api.cn-huabei-1.xf-yun.com/v1"
-model="xdeepseekv31"
-api_key="sk-xxxxxxx16E165Bd"
+api_base = "https://api.deepseek.com/v1"
+model = "deepseek-chat"
+api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 [report]
-api_base="https://maas-api.cn-huabei-1.xf-yun.com/v1"
-model="xdeepseekv31"
-api_key="sk-xxxxxxx16E165Bd"
+api_base = "https://api.deepseek.com/v1"
+model = "deepseek-chat"
+api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
